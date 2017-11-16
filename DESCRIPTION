@@ -1,7 +1,7 @@
 Package: googleLanguageR
 Title: Call Google's 'Natural Language' API, 'Cloud Translation' API
         and 'Cloud Speech' API
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(person("Mark", "Edmondson", email = "r@sunholo.com", role = c("aut", "cre")),
              person("Neal", "Richardson", email = "neal.p.richardson@gmail.com", role = "rev",
              comment = "Neal reviewed the package for ropensci, 
@@ -28,7 +28,7 @@ Imports: assertthat, base64enc, googleAuthR, jsonlite, magrittr, purrr,
 Suggests: cld2, httptest, knitr, rmarkdown, rvest, stringdist, tidyr,
         xml2
 NeedsCompilation: no
-Packaged: 2017-09-21 18:15:04 UTC; mark
+Packaged: 2017-11-16 10:07:40 UTC; mark
 Author: Mark Edmondson [aut, cre],
   Neal Richardson [rev] (Neal reviewed the package for ropensci, see
     <https://github.com/ropensci/onboarding/issues/127>),
@@ -36,4 +36,4 @@ Author: Mark Edmondson [aut, cre],
     <https://github.com/ropensci/onboarding/issues/127>)
 Maintainer: Mark Edmondson <r@sunholo.com>
 Repository: CRAN
-Date/Publication: 2017-09-22 08:51:56 UTC
+Date/Publication: 2017-11-16 10:40:45 UTC

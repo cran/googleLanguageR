@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-09-21" />
+<meta name="date" content="2017-11-16" />
 
 <title>Google Natural Language API</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Google Natural Language API</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-09-21</em></h4>
+<h4 class="date"><em>2017-11-16</em></h4>
 
 
 
@@ -110,12 +110,12 @@ nlp_result &lt;-<span class="st"> </span><span class="kw">gl_nlp</span>(texts)</
 <span class="co">#  ..$ score    : num [1:2] 0.5 -0.3</span></code></pre></div>
 <p>Sentence structure and sentiment:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## sentences structure
-nlp_result$sentences[[<span class="dv">2</span>]]
+nlp_result<span class="op">$</span>sentences[[<span class="dv">2</span>]]
 <span class="co">#                                                content beginOffset magnitude score</span>
 <span class="co">#1 I don't know how to make a text demo that is sensible           0       0.3  -0.3</span></code></pre></div>
 <p>Information on what words (tokens) are within each text:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># word tokens data</span>
-<span class="kw">str</span>(nlp_result$tokens[[<span class="dv">1</span>]])
+<span class="kw">str</span>(nlp_result<span class="op">$</span>tokens[[<span class="dv">1</span>]])
 <span class="co">#'data.frame':  6 obs. of  17 variables:</span>
 <span class="co"># $ content       : chr  &quot;to&quot; &quot;administer&quot; &quot;medicince&quot; &quot;to&quot; ...</span>
 <span class="co"># $ beginOffset   : int  0 3 14 24 27 35</span>
@@ -135,7 +135,7 @@ nlp_result$sentences[[<span class="dv">2</span>]]
 <span class="co"># $ label         : chr  &quot;AUX&quot; &quot;CSUBJ&quot; &quot;DOBJ&quot; &quot;PREP&quot; ...</span>
 <span class="co"># $ value         : chr  &quot;to&quot; &quot;administer&quot; &quot;medicince&quot; &quot;to&quot; ...</span></code></pre></div>
 <p>What entities within text have been identified, with optional wikipedia URL if its available.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nlp_result$entities
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nlp_result<span class="op">$</span>entities
 <span class="co">#[[1]]</span>
 <span class="co"># A tibble: 3 x 9</span>
 <span class="co">#       name  type  salience    mid wikipedia_url magnitude score beginOffset mention_type</span>
@@ -150,17 +150,17 @@ nlp_result$sentences[[<span class="dv">2</span>]]
 <span class="co">#      &lt;chr&gt;       &lt;chr&gt;    &lt;int&gt; &lt;fctr&gt;        &lt;fctr&gt;     &lt;dbl&gt; &lt;dbl&gt;       &lt;int&gt;        &lt;chr&gt;</span>
 <span class="co">#1 text demo WORK_OF_ART        1   &lt;NA&gt;          &lt;NA&gt;        NA    NA          27       COMMON</span></code></pre></div>
 <p>Sentiment of the entire text:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nlp_result$documentSentiment
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nlp_result<span class="op">$</span>documentSentiment
 <span class="co"># A tibble: 2 x 2</span>
   magnitude score
-      &lt;dbl&gt;<span class="st"> </span><span class="er">&lt;</span>dbl&gt;
+      <span class="op">&lt;</span>dbl<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span>
 <span class="dv">1</span>       <span class="fl">0.5</span>   <span class="fl">0.5</span>
-<span class="dv">2</span>       <span class="fl">0.3</span>  -<span class="fl">0.3</span></code></pre></div>
+<span class="dv">2</span>       <span class="fl">0.3</span>  <span class="op">-</span><span class="fl">0.3</span></code></pre></div>
 <p>The language for the text:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nlp_result$language
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nlp_result<span class="op">$</span>language
 <span class="co"># [1] &quot;en&quot; &quot;en&quot;</span></code></pre></div>
 <p>The original passed in text, to aid with working with the output:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nlp_result$text
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nlp_result<span class="op">$</span>text
 <span class="co"># [1] &quot;to administer medicince to animals is frequently a very difficult matter,\n         and yet sometimes  it's necessary to do so&quot;</span>
 <span class="co"># [2] &quot;I don't know how to make a text demo that is sensible&quot;  </span></code></pre></div>
 </div>
