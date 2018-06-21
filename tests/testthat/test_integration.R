@@ -1,40 +1,4 @@
-library(httptest)
-library(rvest)
-library(magrittr)
-
-.mockPaths("..")
-
-local_auth <- Sys.getenv("GL_AUTH") != ""
-if(!local_auth){
-  cat("\nNo authentication file detected - skipping integration tests\n")
-} else {
-  cat("\nPerforming API calls for integration tests\n")
-}
-
-on_travis <- Sys.getenv("CI") == "true"
-if(on_travis){
-  cat("\n#testing on CI - working dir: ", path.expand(getwd()), "\n")
-} else {
-  cat("\n#testing not on CI\n")
-}
-
-## Generate test text and audio
-
-# HTML testing
-my_url <- "http://www.dr.dk/nyheder/indland/greenpeace-facebook-og-google-boer-foelge-apples-groenne-planer"
-
-html_result <- read_html(my_url) %>%
-  html_node(css = ".wcms-article-content") %>%
-  html_text
-
-test_text <- "The cat sat on the mat"
-test_text2 <- "How much is that doggy in the window?"
-trans_text <- "Der gives Folk, der i den Grad omgaaes letsindigt og skammeligt med Andres Ideer, de snappe op, at de burde tiltales for ulovlig Omgang med Hittegods."
-expected <- "People who are soberly and shamefully opposed to the ideas of others are given to people that they should be accused of unlawful interference with the former."
-# a lot of text
-lots <- rep(paste(html_result, trans_text, expected),35)
-
-
+source("prep_tests.R")
 
 context("Integration tests - Auth")
 
@@ -57,11 +21,11 @@ test_that("NLP returns expected fields", {
 
   nlp <- gl_nlp(test_text)
 
-  expect_equal(length(nlp), 6)
+  expect_equal(length(nlp), 7)
   expect_true(all(names(nlp) %in%
-                     c("sentences","tokens","entities","documentSentiment","language", "text")))
+                     c("sentences","tokens","entities","documentSentiment","language", "text", "classifyText")))
   expect_s3_class(nlp$sentences[[1]], "data.frame")
-  expect_equal(nlp$sentences[[1]]$content, test_text)
+  expect_equal(nlp$sentences[[1]]$content[[1]], "Norma is a small constellation in the Southern Celestial Hemisphere between Ara and Lupus, one of twelve drawn up in the 18th century by French astronomer Nicolas Louis de Lacaille and one of several depicting scientific instruments.")
   expect_true(all(names(nlp$sentences[[1]]) %in% c("content","beginOffset","magnitude","score")))
   expect_true(all(names(nlp$tokens[[1]]) %in% c("content", "beginOffset", "tag", "aspect", "case",
                                          "form", "gender", "mood", "number", "person", "proper",
@@ -75,13 +39,14 @@ test_that("NLP returns expected fields", {
   expect_s3_class(nlp$tokens[[1]], "data.frame")
   expect_s3_class(nlp$entities[[1]], "data.frame")
   expect_s3_class(nlp$documentSentiment, "data.frame")
+  expect_s3_class(nlp$classifyText, "data.frame")
 
 
 
   nlp2 <- gl_nlp(c(test_text, test_text2))
-  expect_equal(length(nlp2), 6)
+  expect_equal(length(nlp2), 7)
   expect_true(all(names(nlp2) %in%
-               c("sentences","tokens","entities","text","documentSentiment","language")))
+               c("sentences","tokens","entities","text","documentSentiment","language", "classifyText")))
   expect_equal(length(nlp2$sentences), 2)
 
 })
@@ -173,11 +138,67 @@ test_that("Translation works", {
 
   expect_true(grepl("There are a few words spoken to Apple", trans_result$translatedText))
 
-  # expect_equal(sum(nchar(lots)), 115745L)
-  #
-  # big_r <- gl_translate(lots)
-  #
-  # expect_equal(nrow(big_r), 35)
 
 })
+
+context("Integration tests - Talk")
+
+test_that("Simple talk API call creates a file", {
+  skip_on_cran()
+  skip_if_not(local_auth)
+
+  unlink("test.wav")
+  filename <- gl_talk("Test talk sentence", output  = "test.wav", languageCode = "en",  gender = "FEMALE")
+
+  expect_equal(filename, "test.wav")
+  expect_true(file.exists("test.wav"))
+  expect_gt(file.info("test.wav")$size, 50000)
+
+  on.exit(unlink("test.wav"))
+
+})
+
+test_that("Specify a named voice", {
+  skip_on_cran()
+  skip_if_not(local_auth)
+
+  unlink("test2.wav")
+  filename <- gl_talk("Hasta la vista", name = "es-ES-Standard-A", output = "test2.wav")
+
+  expect_equal(filename, "test2.wav")
+  expect_true(file.exists("test2.wav"))
+  expect_gt(file.info("test2.wav")$size, 50000)
+
+  on.exit(unlink("test2.wav"))
+
+})
+
+test_that("Get list of talk languages", {
+  skip_on_cran()
+  skip_if_not(local_auth)
+
+  lang <- gl_talk_languages()
+
+  expect_s3_class(lang, "data.frame")
+  expect_gt(nrow(lang), 30)
+  expect_true(all(names(lang) %in% c("languageCodes","name","ssmlGender","naturalSampleRateHertz")),
+              info = "expect names in data.frame")
+
+
+})
+
+test_that("Get filtered list of talk languages", {
+  skip_on_cran()
+  skip_if_not(local_auth)
+
+  lang <- gl_talk_languages(languageCode = "en")
+
+  expect_s3_class(lang, "data.frame")
+  expect_true(all(names(lang) %in% c("languageCodes","name","ssmlGender","naturalSampleRateHertz")),
+              info = "expect names in data.frame")
+  expect_true(all(grepl("^en-", lang$languageCodes)),
+              info = "Only languageCodes beginning with en")
+
+})
+
 

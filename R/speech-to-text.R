@@ -4,7 +4,7 @@
 #'
 #' @param audio_source File location of audio data, or Google Cloud Storage URI
 #' @param encoding Encoding of audio data sent
-#' @param sampleRateHertz Sample rate in Hertz of audio data. Valid values \code{8000-48000}. Optimal \code{16000}
+#' @param sampleRateHertz Sample rate in Hertz of audio data. Valid values \code{8000-48000}. Optimal and default if left \code{NULL} is \code{16000}
 #' @param languageCode Language of the supplied audio as a \code{BCP-47} language tag
 #' @param maxAlternatives Maximum number of recognition hypotheses to be returned. \code{0-30}
 #' @param profanityFilter If \code{TRUE} will attempt to filter out profanities
@@ -38,7 +38,6 @@
 #'
 #' @section WordInfo:
 #'
-#' Use \code{tidyr::unnest()} to extract the word columns if needed.
 #'
 #' \code{startTime} - Time offset relative to the beginning of the audio, and corresponding to the start of the spoken word.
 #'
@@ -53,12 +52,14 @@
 #' test_audio <- system.file("woman1_wb.wav", package = "googleLanguageR")
 #' result <- gl_speech(test_audio)
 #'
+#' result$transcript
+#' result$timings
+#'
 #' result2 <- gl_speech(test_audio, maxAlternatives = 2L)
+#' result2$transcript
 #'
 #' result_brit <- gl_speech(test_audio, languageCode = "en-GB")
 #'
-#' ## extract word timestamps
-#' tidyr::unnest(result_brit)
 #'
 #' ## make an asynchronous API request (mandatory for sound files over 60 seconds)
 #' asynch <- gl_speech(test_audio, asynch = TRUE)
@@ -66,6 +67,10 @@
 #' ## Send to gl_speech_op() for status or finished result
 #' gl_speech_op(asynch)
 #'
+#' ## Upload to GCS bucket for long files > 60 seconds
+#' test_gcs <- "gs://mark-edmondson-public-files/googleLanguageR/a-dream-mono.wav"
+#' gcs <- gl_speech(test_gcs, sampleRateHertz = 44100L, asynch = TRUE)
+#' gl_speech_op(gcs)
 #' }
 #'
 #'
@@ -78,17 +83,21 @@
 gl_speech <- function(audio_source,
                       encoding = c("LINEAR16","FLAC","MULAW","AMR",
                                    "AMR_WB","OGG_OPUS","SPEEX_WITH_HEADER_BYTE"),
-                      sampleRateHertz = 16000L,
+                      sampleRateHertz = NULL,
                       languageCode = "en-US",
                       maxAlternatives = 1L,
                       profanityFilter = FALSE,
                       speechContexts = NULL,
                       asynch = FALSE){
 
+  if(is.null(sampleRateHertz)){
+    my_message("Setting sampleRateHertz = 16000L")
+    sampleRateHertz <- 16000L
+  }
   assert_that(is.string(audio_source),
-              is.numeric(sampleRateHertz),
               is.string(languageCode),
               is.numeric(maxAlternatives),
+              is.scalar(sampleRateHertz),
               is.logical(profanityFilter))
 
   encoding <- match.arg(encoding)
@@ -138,25 +147,45 @@ gl_speech <- function(audio_source,
 # parse normal speech call responses
 parse_speech <- function(x){
   if(!is.null(x$totalBilledTime)){
-    my_message("Speech transcription finished. Total billed time: ", x$totalBilledTime, level = 3)
+    my_message("Speech transcription finished. Total billed time: ",
+               x$totalBilledTime, level = 3)
   }
 
-  transcript <- my_map_df(x$results$alternatives, ~ as_tibble(cbind(transcript = .x$transcript, confidence = .x$confidence)))
-  timings    <- my_map_df(x$results$alternatives, ~ .x$words[[1]])
+  transcript <-
+    my_map_df(x$results$alternatives,
+              ~ as_tibble(cbind(transcript = ifelse(!is.null(.x$transcript),
+                                                             .x$transcript,NA),
+                                confidence = ifelse(!is.null(.x$confidence),
+                                                             .x$confidence,NA))))
+  timings    <- my_map_df(x$results$alternatives,
+                          ~ .x$words[[1]])
 
   list(transcript = transcript, timings = timings)
 }
 
 # parse asynchronous speech calls responses
-parse_async <- function(x) {
-  if(!is.null(x$metadata$startTime)){
-    my_message("Speech transcription running - started at ", x$metadata$startTime,
-               " - last update: ", x$metadata$lastUpdateTime, level = 3)
+parse_async <- function(x){
+
+  if(is.null(x$done)){
+    my_message("Speech transcription running")
+    if(!is.null(x$metadata$startTime)){
+      my_message("- started at ", x$metadata$startTime,
+                 " - last update: ", x$metadata$lastUpdateTime,
+                 level = 3)
+    }
+    return(structure(x, class = "gl_speech_op"))
+  } else {
+    my_message("Asychronous transcription finished.", level = 3)
   }
-  structure(x, class = "gl_speech_op")
+
+  parse_speech(x$response)
+
 }
 
-# pretty print of gl_speech_op
+#' pretty print of gl_speech_op
+#' @export
+#' @keywords internal
+#' @noRd
 print.gl_speech_op <- function(x, ...){
   cat("## Send to gl_speech_op() for status")
   cat("\n##", x$name)
@@ -200,22 +229,9 @@ gl_speech_op <- function(operation){
 
   call_api <- gar_api_generator(sprintf("https://speech.googleapis.com/v1/operations/%s", operation$name),
                                 "GET",
-                                data_parse_function = parse_op)
+                                data_parse_function = parse_async)
   call_api()
 
 }
 
-# parses operation responses
-parse_op <- function(x){
-  if(!is.null(x$done)){
-    if(!is.null(x$error)){
-      out <- x$error
-    } else {
-      out <- parse_speech(x$response)
-    }
-  } else {
-    out <- parse_async(x)
-  }
 
-  out
-}

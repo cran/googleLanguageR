@@ -1,6 +1,6 @@
 #' Perform Natural Language Analysis
 #'
-#' Analyse text entities, sentiment, and syntax using the Google Natural Language API
+#' Analyse text entities, sentiment, syntax and categorisation using the Google Natural Language API
 #'
 #' @param string A vector of text to detect language for, or Google Cloud Storage URI(s)
 #' @param nlp_type The type of Natural Language Analysis to perform.  The default \code{annotateText} will perform all features in one call.
@@ -25,6 +25,7 @@
 #'  \item{tokens - }{\href{https://cloud.google.com/natural-language/docs/reference/rest/v1/Token}{Tokens, along with their syntactic information, in the input document}}
 #'  \item{entities - }{\href{https://cloud.google.com/natural-language/docs/reference/rest/v1/Entity}{Entities, along with their semantic information, in the input document}}
 #'  \item{documentSentiment - }{\href{https://cloud.google.com/natural-language/docs/reference/rest/v1/Sentiment}{The overall sentiment for the document}}
+#'  \item{classifyText -}{\href{https://cloud.google.com/natural-language/docs/classifying-text}{Classification of the document}}
 #'  \item{language - }{The language of the text, which will be the same as the language specified in the request or, if not specified, the automatically-detected language}
 #'  \item{text - }{The original text passed into the API. \code{NA} if not passed due to being zero-length etc. }
 #' }
@@ -67,7 +68,8 @@ gl_nlp <- function(string,
                                 "analyzeEntities",
                                 "analyzeSentiment",
                                 "analyzeSyntax",
-                                "analyzeEntitySentiment"),
+                                "analyzeEntitySentiment",
+                                "classifyText"),
                    type = c("PLAIN_TEXT", "HTML"),
                    language = c("en", "zh","zh-Hant","fr","de",
                                 "it","ja","ko","pt","es"),
@@ -78,7 +80,7 @@ gl_nlp <- function(string,
   language      <- match.arg(language)
   encodingType  <- match.arg(encodingType)
   # global env set in version.R
-  version       <- .glr$version
+  version       <- get_version()
 
   api_results <- map(string, gl_nlp_single,
       nlp_type = nlp_type,
@@ -98,8 +100,9 @@ gl_nlp <- function(string,
   out$language <- map_chr(api_results, ~ if(is.null(.x)){ NA } else {.x$language})
   out$text     <- map_chr(api_results, ~ if(is.null(.x)){ NA } else {.x$text})
   out$documentSentiment <- my_map_df(api_results,  out_documentSentiment)
+  out$classifyText <- my_map_df(api_results, out_classifyText)
 
-  compact(out)
+  out
 
 }
 
@@ -114,6 +117,18 @@ out_documentSentiment <- function(x){
   out
 }
 
+out_classifyText <- function(x){
+
+  out <- tibble(name=NA_character_, confidence=NA_integer_)
+
+  if(!is.null(x)){
+    out <- as_tibble(x$classifyText)
+  }
+
+  out
+
+}
+
 #' Used to vectorise gl_nlp
 #' @import assertthat
 #' @importFrom googleAuthR gar_api_generator
@@ -124,7 +139,8 @@ gl_nlp_single <- function(string,
                                        "analyzeEntities",
                                        "analyzeSentiment",
                                        "analyzeSyntax",
-                                       "analyzeEntitySentiment"),
+                                       "analyzeEntitySentiment",
+                                       "classifyText"),
                           type = c("PLAIN_TEXT", "HTML"),
                           language = c("en", "zh","zh-Hant","fr","de",
                                        "it","ja","ko","pt","es"),
@@ -173,11 +189,14 @@ gl_nlp_single <- function(string,
       features = list(
         extractSyntax = jubox(TRUE),
         extractEntities = jubox(TRUE),
-        extractDocumentSentiment = jubox(TRUE)
+        extractDocumentSentiment = jubox(TRUE),
+        extractEntitySentiment = jubox(TRUE),
+        classifyText = jubox(TRUE)
       )))
 
     if(version == "v1beta2"){
-      body$features$extractEntitySentiment = jubox(TRUE)
+      # put beta features here
+      #body$features$extractEntitySentiment = jubox(TRUE)
     }
   }
 
@@ -202,15 +221,15 @@ gl_nlp_single <- function(string,
 #' @noRd
 parse_nlp <- function(x){
 
-  s <- t <- e <- d <- NULL
+  s <- t <- e <- d <- cats <- NULL
 
   if(!is_empty(x$sentences)){
-    s <- cbind(as_tibble(x$sentences$text),
+    s <- my_cbind(as_tibble(x$sentences$text),
                    as_tibble(x$sentences$sentiment))
   }
 
   if(!is_empty(x$tokens)){
-    t <- cbind(as_tibble(x$tokens$text),
+    t <- my_cbind(as_tibble(x$tokens$text),
                    as_tibble(x$tokens$partOfSpeech),
                    as_tibble(x$tokens$dependencyEdge),
                    as_tibble(x$tokens$lemma))
@@ -221,15 +240,15 @@ parse_nlp <- function(x){
     e <- x$entities[, c("name","type","salience")]
 
     if(!is_empty(x$entities$metadata)){
-      e <- cbind(e, x$entities$metadata)
+      e <- my_cbind(e, x$entities$metadata)
     } else {
-      e <- cbind(e, data.frame(mid = NA_character_, wikipedia_url = NA_character_))
+      e <- my_cbind(e, data.frame(mid = NA_character_, wikipedia_url = NA_character_))
     }
 
     if(!is_empty(x$entities$sentiment)){
-      e <- cbind(e, x$entities$sentiment)
+      e <- my_cbind(e, x$entities$sentiment)
     } else {
-      e <- cbind(e, data.frame(magnitude = NA_real_, score = NA_real_))
+      e <- my_cbind(e, data.frame(magnitude = NA_real_, score = NA_real_))
     }
 
     ## needs to come last as mentions can hold more rows than
@@ -237,14 +256,14 @@ parse_nlp <- function(x){
     if(!is_empty(x$entities$mentions)){
 
       mentions <- my_map_df(x$entities$mentions,
-                         ~ cbind(.x$text, tibble(mention_type = .x$type)))
+                         ~ my_cbind(.x$text, tibble(mention_type = .x$type)))
 
       e <- merge(e, mentions, by.x = "name", by.y = "content", all = TRUE)
 
     } else {
       ## for v1beta2 will also add sentiment_ ?
       ## https://cloud.google.com/natural-language/docs/reference/rest/v1beta2/Entity#EntityMention
-      e <- cbind(e, data.frame(beginOffset = NA_integer_, type = NA_character_))
+      e <- my_cbind(e, data.frame(beginOffset = NA_integer_, type = NA_character_))
     }
 
     e <- as_tibble(e)
@@ -255,11 +274,16 @@ parse_nlp <- function(x){
     d <- as_tibble(x$documentSentiment)
   }
 
+  if(!is_empty(x$categories)){
+    cats <- x$categories
+  }
+
   compact(list(
     sentences = s,
     tokens = t,
     entities = e,
     documentSentiment = d,
+    classifyText = cats,
     language = x$language
   ))
 

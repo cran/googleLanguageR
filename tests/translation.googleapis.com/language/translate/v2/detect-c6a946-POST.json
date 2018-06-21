@@ -1,13 +1,13 @@
 {
-  "data": {
-    "detections": [
-      [
-        {
-          "isReliable": false,
-          "language": "da",
-          "confidence": 1
-        }
-      ]
-    ]
-  }
+    "data": {
+        "detections": [
+            [
+                {
+                    "confidence": 1,
+                    "isReliable": false,
+                    "language": "da"
+                }
+            ]
+        ]
+    }
 }
