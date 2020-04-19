@@ -10,6 +10,7 @@
 #' @param profanityFilter If \code{TRUE} will attempt to filter out profanities
 #' @param speechContexts An optional character vector of context to assist the speech recognition
 #' @param asynch If your \code{audio_source} is greater than 60 seconds, set this to TRUE to return an asynchronous call
+#' @param customConfig [optional] A \code{RecognitionConfig} object that will be converted from a list to JSON via \code{\link[jsonlite]{toJSON}} - see \href{https://cloud.google.com/speech-to-text/docs/reference/rest/v1p1beta1/RecognitionConfig}{RecognitionConfig documentation}. The \code{languageCode} will be taken from this functions arguments if not present since it is required.
 #'
 #' @return A list of two tibbles:  \code{$transcript}, a tibble of the \code{transcript} with a \code{confidence}; \code{$timings}, a tibble that contains \code{startTime}, \code{endTime} per \code{word}.  If maxAlternatives is greater than 1, then the transcript will return near-duplicate rows with other interpretations of the text.
 #'  If \code{asynch} is TRUE, then an operation you will need to pass to \link{gl_speech_op} to get the finished result.
@@ -71,7 +72,21 @@
 #' test_gcs <- "gs://mark-edmondson-public-files/googleLanguageR/a-dream-mono.wav"
 #' gcs <- gl_speech(test_gcs, sampleRateHertz = 44100L, asynch = TRUE)
 #' gl_speech_op(gcs)
+#'
+#' ## Use a custom configuration
+#' my_config <- list(encoding = "LINEAR16",
+#'                   diarizationConfig = list(
+#'                     enableSpeakerDiarization = TRUE,
+#'                     minSpeakerCount = 2,
+#'                     maxSpeakCount = 3
+#'                     ))
+#'
+#' # languageCode is required, so will be added if not in your custom config
+#' gl_speech(my_audio, languageCode = "en-US", customConfig = my_config)
+#'
 #' }
+#'
+
 #'
 #'
 #' @seealso \url{https://cloud.google.com/speech/reference/rest/v1/speech/recognize}
@@ -88,7 +103,19 @@ gl_speech <- function(audio_source,
                       maxAlternatives = 1L,
                       profanityFilter = FALSE,
                       speechContexts = NULL,
-                      asynch = FALSE){
+                      asynch = FALSE,
+                      customConfig = NULL){
+
+  if (inherits(audio_source, "Wave")) {
+    if (requireNamespace("tuneR", quietly = TRUE)) {
+      if (is.null(sampleRateHertz)) {
+        sampleRateHertz = as.integer(audio_source@samp.rate)
+      }
+      outfile = tempfile(fileext = ".wav")
+      tuneR::writeWave(object = audio_source, filename = outfile)
+      audio_source = outfile
+    }
+  }
 
   if(is.null(sampleRateHertz)){
     my_message("Setting sampleRateHertz = 16000L")
@@ -108,14 +135,26 @@ gl_speech <- function(audio_source,
     )
   } else {
     assert_that(is.readable(audio_source))
-
+    assert_that(file.size(audio_source) <= 10485760,
+                msg = paste0(
+                  "Audio source size is too big > 10485760 bytes,",
+                  " must split or reduce size"))
     recognitionAudio <- list(
       content = base64encode(audio_source)
     )
   }
 
-  body <- list(
-    config = list(
+  if(!is.null(customConfig)){
+    assert_that(is.list(customConfig))
+    config <- customConfig
+
+    # config has to include languageCode, if not present use argument
+    if(is.null(config$languageCode)){
+      config$languageCode <- languageCode
+    }
+
+  } else {
+    config <- list(
       encoding = encoding,
       sampleRateHertz = sampleRateHertz,
       languageCode = languageCode,
@@ -123,19 +162,26 @@ gl_speech <- function(audio_source,
       profanityFilter = profanityFilter,
       speechContexts = speechContexts,
       enableWordTimeOffsets = TRUE
-    ),
+    )
+  }
+
+  body <- list(
+    config = config,
     audio = recognitionAudio
   )
 
+  # beta or production API endpoint
+  endpoint <- sprintf("https://speech.googleapis.com/%s/speech:", get_version("speech"))
+
   ## asynch or normal call?
   if(asynch){
-    call_api <- gar_api_generator("https://speech.googleapis.com/v1/speech:longrunningrecognize",
+    call_api <- gar_api_generator(paste0(endpoint, "longrunningrecognize"),
                                   "POST",
                                   data_parse_function = parse_async)
 
   } else {
 
-    call_api <- gar_api_generator("https://speech.googleapis.com/v1/speech:recognize",
+    call_api <- gar_api_generator(paste0(endpoint, "recognize"),
                                   "POST",
                                   data_parse_function = parse_speech)
   }
@@ -146,6 +192,7 @@ gl_speech <- function(audio_source,
 
 # parse normal speech call responses
 parse_speech <- function(x){
+
   if(!is.null(x$totalBilledTime)){
     my_message("Speech transcription finished. Total billed time: ",
                x$totalBilledTime, level = 3)
@@ -157,10 +204,27 @@ parse_speech <- function(x){
                                                              .x$transcript,NA),
                                 confidence = ifelse(!is.null(.x$confidence),
                                                              .x$confidence,NA))))
-  timings    <- my_map_df(x$results$alternatives,
+  timings <- map(x$results$alternatives,
                           ~ .x$words[[1]])
 
-  list(transcript = transcript, timings = timings)
+  languageCode <- NA_character_
+  channelTag <- NA_character_
+
+  if(!is.null(x$results$languageCode)){
+    languageCode <- x$results$languageCode
+  }
+
+  if(!is.null(x$results$channelTag)){
+    channelTag <- x$results$channelTag
+  }
+
+  alts <- cbind(transcript,
+                languageCode = languageCode,
+                channelTag = channelTag,
+                stringsAsFactors = FALSE)
+
+  list(transcript = alts,
+       timings = timings)
 }
 
 # parse asynchronous speech calls responses
@@ -175,7 +239,7 @@ parse_async <- function(x){
     }
     return(structure(x, class = "gl_speech_op"))
   } else {
-    my_message("Asychronous transcription finished.", level = 3)
+    my_message("Asynchronous transcription finished.", level = 3)
   }
 
   parse_speech(x$response)
@@ -221,7 +285,7 @@ is.gl_speech_op <- function(x){
 #'
 #' }
 #'
-gl_speech_op <- function(operation){
+gl_speech_op <- function(operation = .Last.value){
 
   assert_that(
     is.gl_speech_op(operation)

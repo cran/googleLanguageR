@@ -80,7 +80,7 @@ gl_nlp <- function(string,
   language      <- match.arg(language)
   encodingType  <- match.arg(encodingType)
   # global env set in version.R
-  version       <- get_version()
+  version       <- get_version("nlp")
 
   api_results <- map(string, gl_nlp_single,
       nlp_type = nlp_type,
@@ -97,10 +97,19 @@ gl_nlp <- function(string,
   the_types    <- setNames(the_types, the_types)
   ## create output shape
   out          <- map(the_types, ~ map(api_results, .x))
-  out$language <- map_chr(api_results, ~ if(is.null(.x)){ NA } else {.x$language})
-  out$text     <- map_chr(api_results, ~ if(is.null(.x)){ NA } else {.x$text})
+
+  out$language <- map_chr(api_results,
+                          ~ if(is.null(.x) || is.null(.x$language)){
+                              NA_character_ }
+                          else {.x$language})
+
+  out$text     <- map_chr(api_results,
+                          ~ if(is.null(.x) || is.null(.x$text)){
+                              NA_character_ }
+                          else {.x$text})
+
   out$documentSentiment <- my_map_df(api_results,  out_documentSentiment)
-  out$classifyText <- my_map_df(api_results, out_classifyText)
+  out$classifyText <- map(api_results, out_classifyText)
 
   out
 
@@ -110,7 +119,7 @@ out_documentSentiment <- function(x){
 
   out <- tibble(magnitude=NA_real_, score=NA_real_)
 
-  if(!is.null(x)){
+  if(!is.null(x$documentSentiment)){
     out <- as_tibble(x$documentSentiment)
   }
 
@@ -121,7 +130,7 @@ out_classifyText <- function(x){
 
   out <- tibble(name=NA_character_, confidence=NA_integer_)
 
-  if(!is.null(x)){
+  if(!is.null(x$classifyText)){
     out <- as_tibble(x$classifyText)
   }
 
@@ -145,18 +154,21 @@ gl_nlp_single <- function(string,
                           language = c("en", "zh","zh-Hant","fr","de",
                                        "it","ja","ko","pt","es"),
                           encodingType = c("UTF8","UTF16","UTF32","NONE"),
-                          version = c("v1", "v1beta2")){
+                          version = "v1"){
 
   ## string processing
-  assert_that(is.string(string))
+  assert_that(is.string(string), is.string(version))
   string <- trimws(string)
   if(nchar(string) == 0 || is.na(string)){
     my_message("Zero length string passed, not calling API", level = 2)
-    return(NULL)
+    return(list(sentences = "#error - zero length string",
+                tokens = "#error - zero length string",
+                entities = "#error - zero length string",
+                language = "#error - zero length string",
+                text = string))
   }
 
   nlp_type      <- match.arg(nlp_type)
-  version       <- match.arg(version)
   type          <- match.arg(type)
   language      <- match.arg(language)
   encodingType  <- match.arg(encodingType)
@@ -168,6 +180,11 @@ gl_nlp_single <- function(string,
 
   call_url <- sprintf("https://language.googleapis.com/%s/documents:%s",
                       version, nlp_type)
+
+  if(nlp_type == "classifyText"){
+    # it errors if you send this in...
+    encodingType <- NULL
+  }
 
   body <- list(
     document = list(
@@ -200,12 +217,26 @@ gl_nlp_single <- function(string,
     }
   }
 
+
+
   call_api <- gar_api_generator(call_url,
                                 "POST",
                                 data_parse_function = parse_nlp)
 
 
-  out <- call_api(the_body = body)
+  out <- tryCatch(call_api(the_body = body),
+                  error = function(err){
+                    if(grepl("too few tokens", err$message)){
+                      warning("If nlp_type='annotateText' or 'classifyText' then you need at least 20 words in input")
+                    }
+                    my_message("Error processing string: '",
+                               string, "' ", err$message,
+                               level = 3)
+                    list(sentences = paste("#error - ", err$message),
+                         tokens = paste("#error - ", err$message),
+                         entities = paste("#error - ", err$message),
+                         language = paste("#error - ", err$message))
+                  })
 
   out$text <- string
 
