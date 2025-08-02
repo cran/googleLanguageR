@@ -181,7 +181,7 @@ str(nlp_result, max.level = 2)
 ```
 
 See more examples and details [on the
-website](http://code.markedmondson.me/googleLanguageR/articles/nlp.html)
+website](https://code.markedmondson.me/googleLanguageR/articles/nlp.html)
 or via `vignette("nlp", package = "googleLanguageR")`
 
 ## Google Translation API
@@ -200,7 +200,7 @@ gl_translate(text, target = "da")$translatedText
 ```
 
 See more examples and details [on the
-website](http://code.markedmondson.me/googleLanguageR/articles/translation.html)
+website](https://code.markedmondson.me/googleLanguageR/articles/translation.html)
 or via `vignette("translate", package = "googleLanguageR")`
 
 ## Google Cloud Speech-to-Text API
@@ -232,7 +232,7 @@ gl_speech(test_audio)$transcript
 ```
 
 See more examples and details [on the
-website](http://code.markedmondson.me/googleLanguageR/articles/speech.html)
+website](https://code.markedmondson.me/googleLanguageR/articles/speech.html)
 or via `vignette("speech", package = "googleLanguageR")`
 
 ## Google Cloud Text-to-Speech API
@@ -247,7 +247,7 @@ gl_talk("This is a talking computer.  Hello Dave.")
 ```
 
 See more examples and details [on the
-website](http://code.markedmondson.me/googleLanguageR/articles/text-to-speech.html)
+website](https://code.markedmondson.me/googleLanguageR/articles/text-to-speech.html)
 or via `vignette("text-to-speech", package =
 "googleLanguageR")`
 

@@ -35,7 +35,7 @@ gl_translate_languages("da")
 \url{https://cloud.google.com/translate/docs/reference/languages}
 
 Other translations: 
-\code{\link{gl_translate_detect}()},
-\code{\link{gl_translate}()}
+\code{\link{gl_translate}()},
+\code{\link{gl_translate_detect}()}
 }
 \concept{translations}

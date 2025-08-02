@@ -5,7 +5,7 @@
 #'
 #' For examples and documentation see the vignettes and the website:
 #'
-#' \url{http://code.markedmondson.me/googleLanguageR/}
+#' \url{https://code.markedmondson.me/googleLanguageR/}
 #'
 #' @seealso \url{https://cloud.google.com/products/machine-learning/}
 #'

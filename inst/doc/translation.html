@@ -12,76 +12,108 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2020-04-19" />
+<meta name="date" content="2025-08-02" />
 
 <title>Google Cloud Translation API</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {  }
+{ }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -90,13 +122,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -104,6 +143,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -301,54 +341,84 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Google Cloud Translation API</h1>
 <h4 class="author">Mark Edmondson</h4>
-<h4 class="date">2020-04-19</h4>
+<h4 class="date">2025-08-02</h4>
 
 
 
-<p>The Google Cloud Translation API provides a simple programmatic interface for translating an arbitrary string into any supported language. Translation API is highly responsive, so websites and applications can integrate with Translation API for fast, dynamic translation of source text from the source language to a target language (e.g. French to English).</p>
-<p>Read more <a href="https://cloud.google.com/translate/">on the Google Cloud Translation Website</a></p>
-<p>You can detect the language via <code>gl_translate_detect</code>, or translate and detect language via <code>gl_translate</code></p>
+<p>The Google Cloud Translation API provides a simple programmatic
+interface for translating an arbitrary string into any supported
+language. Translation API is highly responsive, so websites and
+applications can integrate with Translation API for fast, dynamic
+translation of source text from the source language to a target language
+(e.g. French to English).</p>
+<p>Read more <a href="https://cloud.google.com/translate/">on the Google
+Cloud Translation Website</a></p>
+<p>You can detect the language via <code>gl_translate_detect</code>, or
+translate and detect language via <code>gl_translate</code></p>
 <div id="language-translation" class="section level3">
 <h3>Language Translation</h3>
-<p>Translate text via <code>gl_translate</code>. Note this is a lot more refined than the free version on Google’s translation website.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(googleLanguageR)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">text &lt;-<span class="st"> &quot;to administer medicince to animals is frequently a very difficult matter, and yet sometimes it's necessary to do so&quot;</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">## translate British into Danish</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">gl_translate</span>(text, <span class="dt">target =</span> <span class="st">&quot;da&quot;</span>)<span class="op">$</span>translatedText</a></code></pre></div>
-<p>You can choose the target language via the argument <code>target</code>. The function will automatically detect the language if you do not define an argument <code>source</code>. This function which will also detect the langauge. As it costs the same as <code>gl_translate_detect</code>, its usually cheaper to detect and translate in one step.</p>
-<p>You can pass a vector of text which will first be attempted to translate in one API call - if that fails due to being greater than the API limits, it will attempt again but vectorising the API calls. This will result in more calls and be slower, but cost the same as you are charged per character translated, not per API call.</p>
+<p>Translate text via <code>gl_translate</code>. Note this is a lot more
+refined than the free version on Google’s translation website.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(googleLanguageR)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>text <span class="ot">&lt;-</span> <span class="st">&quot;to administer medicince to animals is frequently a very difficult matter, and yet sometimes it&#39;s necessary to do so&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="do">## translate British into Danish</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">gl_translate</span>(text, <span class="at">target =</span> <span class="st">&quot;da&quot;</span>)<span class="sc">$</span>translatedText</span></code></pre></div>
+<p>You can choose the target language via the argument
+<code>target</code>. The function will automatically detect the language
+if you do not define an argument <code>source</code>. This function
+which will also detect the langauge. As it costs the same as
+<code>gl_translate_detect</code>, its usually cheaper to detect and
+translate in one step.</p>
+<p>You can pass a vector of text which will first be attempted to
+translate in one API call - if that fails due to being greater than the
+API limits, it will attempt again but vectorising the API calls. This
+will result in more calls and be slower, but cost the same as you are
+charged per character translated, not per API call.</p>
 <div id="html-support" class="section level4">
 <h4>HTML support</h4>
-<p>You can also supply web HTML and select the <code>format='html'</code> which will handle HTML tags to give you a cleaner translation.</p>
-<p>Consider removing anything not needed to be translated first, such as JavaScript and CSS scripts using the tools of <code>rvest</code> - an example is shown below:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># translate webpages</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">library</span>(rvest)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">library</span>(googleLanguageR)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">my_url &lt;-<span class="st"> &quot;http://www.dr.dk/nyheder/indland/greenpeace-facebook-og-google-boer-foelge-apples-groenne-planer&quot;</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">## in this case the content to translate is in css select .wcms-article-content</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="kw">read_html</span>(my_url) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># read html</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="st">  </span><span class="kw">html_node</span>(<span class="dt">css =</span> <span class="st">&quot;.wcms-article-content&quot;</span>) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># select article content</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="st">  </span>html_text <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># extract text</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="st">  </span><span class="kw">gl_translate</span>(<span class="dt">format =</span> <span class="st">&quot;html&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># translate with html flag</span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(translatedText) <span class="co"># show translatedText column of output tibble</span></a></code></pre></div>
+<p>You can also supply web HTML and select the
+<code>format=&#39;html&#39;</code> which will handle HTML tags to give you a
+cleaner translation.</p>
+<p>Consider removing anything not needed to be translated first, such as
+JavaScript and CSS scripts using the tools of <code>rvest</code> - an
+example is shown below:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># translate webpages</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">library</span>(googleLanguageR)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>my_url <span class="ot">&lt;-</span> <span class="st">&quot;http://www.dr.dk/nyheder/indland/greenpeace-facebook-og-google-boer-foelge-apples-groenne-planer&quot;</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">## in this case the content to translate is in css select .wcms-article-content</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="fu">read_html</span>(my_url) <span class="sc">%&gt;%</span> <span class="co"># read html</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  <span class="fu">html_node</span>(<span class="at">css =</span> <span class="st">&quot;.wcms-article-content&quot;</span>) <span class="sc">%&gt;%</span>   <span class="co"># select article content</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  html_text <span class="sc">%&gt;%</span> <span class="co"># extract text</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>  <span class="fu">gl_translate</span>(<span class="at">format =</span> <span class="st">&quot;html&quot;</span>) <span class="sc">%&gt;%</span> <span class="co"># translate with html flag</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(translatedText) <span class="co"># show translatedText column of output tibble</span></span></code></pre></div>
 </div>
 </div>
 <div id="language-detection" class="section level3">
 <h3>Language Detection</h3>
 <p>This function only detects the language:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## which language is this?</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">gl_translate_detect</span>(<span class="st">&quot;katten sidder på måtten&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="do">## which language is this?</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">gl_translate_detect</span>(<span class="st">&quot;katten sidder på måtten&quot;</span>)</span></code></pre></div>
 <p>The more text it has, the better. And it helps if its not Danish…</p>
-<p>It may be better to use <a href="https://github.com/ropensci/cld2"><code>cld2</code></a> to translate offline first, to avoid charges if the translation is unnecessary (e.g. already in English). You could then verify online for more uncertain cases.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">cld2<span class="op">::</span><span class="kw">detect_language</span>(<span class="st">&quot;katten sidder på måtten&quot;</span>)</a></code></pre></div>
+<p>It may be better to use <a href="https://github.com/ropensci/cld2"><code>cld2</code></a> to
+translate offline first, to avoid charges if the translation is
+unnecessary (e.g. already in English). You could then verify online for
+more uncertain cases.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>cld2<span class="sc">::</span><span class="fu">detect_language</span>(<span class="st">&quot;katten sidder på måtten&quot;</span>)</span></code></pre></div>
 </div>
 <div id="translation-api-limits" class="section level3">
 <h3>Translation API limits</h3>
-<p>The API limits in three ways: characters per day, characters per 100 seconds, and API requests per 100 seconds. All can be set in the API manager in Google Cloud console: <code>https://console.developers.google.com/apis/api/translate.googleapis.com/quotas</code></p>
-<p>The library will limit the API calls for the characters and API requests per 100 seconds. The API will automatically retry if you are making requests too quickly, and also pause to make sure you only send <code>100000</code> characters per 100 seconds.</p>
+<p>The API limits in three ways: characters per day, characters per 100
+seconds, and API requests per 100 seconds. All can be set in the API
+manager in Google Cloud console:
+<code>https://console.developers.google.com/apis/api/translate.googleapis.com/quotas</code></p>
+<p>The library will limit the API calls for the characters and API
+requests per 100 seconds. The API will automatically retry if you are
+making requests too quickly, and also pause to make sure you only send
+<code>100000</code> characters per 100 seconds.</p>
 </div>
 
 

@@ -30,7 +30,7 @@ gl_auth <- function(json_file){
 #' @export
 #' @rdname gl_auth
 #' @param ... additional argument to
-#' pass to \code{\link{gar_attach_auto_auth}}.
+#' pass to \code{\link[googleAuthR]{gar_attach_auto_auth}}.
 #'
 #' @examples
 #' \dontrun{

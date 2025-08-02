@@ -1,7 +1,7 @@
 Package: googleLanguageR
 Title: Call Google's 'Natural Language' API, 'Cloud Translation' API,
         'Cloud Speech' API and 'Cloud Text-to-Speech' API
-Version: 0.3.0
+Version: 0.3.0.1
 Authors@R: c(person("Mark", "Edmondson", email = "r@sunholo.com", role = c("aut", "cre")),
              person("John", "Muschelli", email = "muschellij2@gmail.com", role = c("ctb")),
              person("Neal", "Richardson", email = "neal.p.richardson@gmail.com", role = "rev",
@@ -18,22 +18,21 @@ Description: Call 'Google Cloud' machine learning APIs for text and speech tasks
   <https://cloud.google.com/speech/> to transcribe sound files to text and 
   the 'Cloud Text-to-Speech' API <https://cloud.google.com/text-to-speech/> to turn text 
   into sound files.
-URL: http://code.markedmondson.me/googleLanguageR/,
+URL: https://code.markedmondson.me/googleLanguageR/,
         https://github.com/ropensci/googleLanguageR,
         https://docs.ropensci.org/googleLanguageR/
 BugReports: https://github.com/ropensci/googleLanguageR/issues
 Depends: R (>= 3.3)
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 Imports: assertthat, base64enc, googleAuthR (>= 1.1.1), jsonlite,
         magrittr, purrr (>= 0.2.4), stats, tibble, utils
 Suggests: cld2, testthat, knitr, rmarkdown, rvest, shiny, shinyjs,
         stringdist, tidyr, tuneR, xml2
 NeedsCompilation: no
-Packaged: 2020-04-19 13:14:01 UTC; mark
+Packaged: 2025-08-02 07:55:03 UTC; hornik
 Author: Mark Edmondson [aut, cre],
   John Muschelli [ctb],
   Neal Richardson [rev] (Neal reviewed the package for ropensci, see
@@ -42,4 +41,4 @@ Author: Mark Edmondson [aut, cre],
     <https://github.com/ropensci/onboarding/issues/127>)
 Maintainer: Mark Edmondson <r@sunholo.com>
 Repository: CRAN
-Date/Publication: 2020-04-19 13:40:02 UTC
+Date/Publication: 2025-08-02 08:02:51 UTC

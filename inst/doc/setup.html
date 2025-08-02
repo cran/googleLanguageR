@@ -12,76 +12,108 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2020-04-19" />
+<meta name="date" content="2025-08-02" />
 
 <title>Introduction to googleLanguageR</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {  }
+{ }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -90,13 +122,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -104,6 +143,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -301,73 +341,114 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Introduction to googleLanguageR</h1>
 <h4 class="author">Mark Edmondson</h4>
-<h4 class="date">2020-04-19</h4>
+<h4 class="date">2025-08-02</h4>
 
 
 
-<p><code>googleLanguageR</code> contains functions for analysing language through the <a href="https://cloud.google.com/products/machine-learning/">Google Cloud Machine Learning APIs</a></p>
-<p>Note all are paid services, you will need to provide your credit card details for your own Google Project to use them.</p>
-<p>The package can be used by any user who is looking to take advantage of Google’s massive dataset to train these machine learning models. Some applications include:</p>
+<p><code>googleLanguageR</code> contains functions for analysing
+language through the <a href="https://cloud.google.com/products/machine-learning/">Google Cloud
+Machine Learning APIs</a></p>
+<p>Note all are paid services, you will need to provide your credit card
+details for your own Google Project to use them.</p>
+<p>The package can be used by any user who is looking to take advantage
+of Google’s massive dataset to train these machine learning models. Some
+applications include:</p>
 <ul>
-<li>Translation of speech into another language text, via speech-to-text then translation</li>
-<li>Identification of sentiment within text, such as from Twitter feeds</li>
-<li>Pulling out the objects of a sentence, to help classify texts and get metadata links from Wikipedia about them.</li>
+<li>Translation of speech into another language text, via speech-to-text
+then translation</li>
+<li>Identification of sentiment within text, such as from Twitter
+feeds</li>
+<li>Pulling out the objects of a sentence, to help classify texts and
+get metadata links from Wikipedia about them.</li>
 </ul>
-<p>The applications of the API results could be relevant to business or researchers looking to scale text analysis.</p>
+<p>The applications of the API results could be relevant to business or
+researchers looking to scale text analysis.</p>
 <div id="google-natural-language-api" class="section level2">
 <h2>Google Natural Language API</h2>
 <blockquote>
-<p>Google Natural Language API reveals the structure and meaning of text by offering powerful machine learning models in an easy to use REST API. You can use it to extract information about people, places, events and much more, mentioned in text documents, news articles or blog posts. You can also use it to understand sentiment about your product on social media or parse intent from customer conversations happening in a call center or a messaging app.</p>
+<p>Google Natural Language API reveals the structure and meaning of text
+by offering powerful machine learning models in an easy to use REST API.
+You can use it to extract information about people, places, events and
+much more, mentioned in text documents, news articles or blog posts. You
+can also use it to understand sentiment about your product on social
+media or parse intent from customer conversations happening in a call
+center or a messaging app.</p>
 </blockquote>
-<p>Read more <a href="https://cloud.google.com/natural-language/">on the Google Natural Language API</a></p>
+<p>Read more <a href="https://cloud.google.com/natural-language/">on the
+Google Natural Language API</a></p>
 </div>
 <div id="google-cloud-translation-api" class="section level2">
 <h2>Google Cloud Translation API</h2>
 <blockquote>
-<p>Google Cloud Translation API provides a simple programmatic interface for translating an arbitrary string into any supported language. Translation API is highly responsive, so websites and applications can integrate with Translation API for fast, dynamic translation of source text from the source language to a target language (e.g. French to English).</p>
+<p>Google Cloud Translation API provides a simple programmatic interface
+for translating an arbitrary string into any supported language.
+Translation API is highly responsive, so websites and applications can
+integrate with Translation API for fast, dynamic translation of source
+text from the source language to a target language (e.g. French to
+English).</p>
 </blockquote>
-<p>Read more <a href="https://cloud.google.com/translate/">on the Google Cloud Translation Website</a></p>
+<p>Read more <a href="https://cloud.google.com/translate/">on the Google
+Cloud Translation Website</a></p>
 </div>
 <div id="google-cloud-speech-api" class="section level2">
 <h2>Google Cloud Speech API</h2>
 <blockquote>
-<p>Google Cloud Speech API enables you to convert audio to text by applying neural network models in an easy to use API. The API recognizes over 80 languages and variants, to support your global user base. You can transcribe the text of users dictating to an application’s microphone or enable command-and-control through voice among many other use cases.</p>
+<p>Google Cloud Speech API enables you to convert audio to text by
+applying neural network models in an easy to use API. The API recognizes
+over 80 languages and variants, to support your global user base. You
+can transcribe the text of users dictating to an application’s
+microphone or enable command-and-control through voice among many other
+use cases.</p>
 </blockquote>
-<p>Read more <a href="https://cloud.google.com/speech/">on the Google Cloud Speech Website</a></p>
+<p>Read more <a href="https://cloud.google.com/speech/">on the Google
+Cloud Speech Website</a></p>
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
 <ol style="list-style-type: decimal">
-<li>Create a <a href="https://cloud.google.com/resource-manager/docs/creating-managing-projects">Google API Console Project</a></li>
-<li>Within your project, add a <a href="https://support.google.com/cloud/answer/6293589">payment method to the project</a></li>
+<li>Create a <a href="https://cloud.google.com/resource-manager/docs/creating-managing-projects">Google
+API Console Project</a></li>
+<li>Within your project, add a <a href="https://support.google.com/cloud/answer/6293589">payment method to
+the project</a></li>
 <li>Within your project, check the relevant APIs are activated</li>
 </ol>
 <ul>
-<li><a href="https://console.cloud.google.com/apis/api/language.googleapis.com/overview">Google Natural Language API</a></li>
-<li><a href="https://console.cloud.google.com/apis/api/translate.googleapis.com/overview">Google Cloud Translation API</a></li>
-<li><a href="https://console.cloud.google.com/apis/api/speech.googleapis.com/overview">Google Cloud Speech API</a></li>
+<li><a href="https://console.cloud.google.com/apis/api/language.googleapis.com/overview">Google
+Natural Language API</a></li>
+<li><a href="https://console.cloud.google.com/apis/api/translate.googleapis.com/overview">Google
+Cloud Translation API</a></li>
+<li><a href="https://console.cloud.google.com/apis/api/speech.googleapis.com/overview">Google
+Cloud Speech API</a></li>
 </ul>
 <ol start="4" style="list-style-type: decimal">
-<li><a href="https://cloud.google.com/storage/docs/authentication#generating-a-private-key">Generate a service account credential</a> as a JSON file</li>
-<li>Return to R, and install this library via <code>devtools::install_github(&quot;MarkEdmondson1234/googleLanguageR&quot;)</code></li>
+<li><a href="https://cloud.google.com/storage/docs/authentication#generating-a-private-key">Generate
+a service account credential</a> as a JSON file</li>
+<li>Return to R, and install this library via
+<code>devtools::install_github(&quot;MarkEdmondson1234/googleLanguageR&quot;)</code></li>
 </ol>
 </div>
 <div id="usage" class="section level2">
 <h2>Usage</h2>
 <div id="authentication" class="section level3">
 <h3>Authentication</h3>
-<p>The best way to authenticate is to use an environment file. See <code>?Startup</code>. I usually place this in my home directory. (e.g. if using RStudio, click on <code>Home</code> in the file explorer, create a new <code>TEXT</code> file and call it <code>.Renviron</code>)</p>
-<p>Set the file location of your download Google Project JSON file in a <code>GL_AUTH</code> argument:</p>
+<p>The best way to authenticate is to use an environment file. See
+<code>?Startup</code>. I usually place this in my home directory.
+(e.g. if using RStudio, click on <code>Home</code> in the file explorer,
+create a new <code>TEXT</code> file and call it
+<code>.Renviron</code>)</p>
+<p>Set the file location of your download Google Project JSON file in a
+<code>GL_AUTH</code> argument:</p>
 <pre><code>#.Renviron
 GL_AUTH=location_of_json_file.json</code></pre>
 <p>Then, when you load the library you should auto-authenticate:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(googleLanguageR)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co"># Setting scopes to https://www.googleapis.com/auth/cloud-platform</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co"># Set any additional scopes via options(googleAuthR.scopes.selected = c('scope1', 'scope2')) before loading library.</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># Successfully authenticated via location_of_json_file.json</span></a></code></pre></div>
-<p>You can also authenticate directly using the <code>gl_auth</code> function pointing at your JSON auth file:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">library</span>(googleLanguageR)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">gl_auth</span>(<span class="st">&quot;location_of_json_file.json&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(googleLanguageR)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># Setting scopes to https://www.googleapis.com/auth/cloud-platform</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Set any additional scopes via options(googleAuthR.scopes.selected = c(&#39;scope1&#39;, &#39;scope2&#39;)) before loading library.</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Successfully authenticated via location_of_json_file.json</span></span></code></pre></div>
+<p>You can also authenticate directly using the <code>gl_auth</code>
+function pointing at your JSON auth file:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(googleLanguageR)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">gl_auth</span>(<span class="st">&quot;location_of_json_file.json&quot;</span>)</span></code></pre></div>
 <p>You can then call the APIs via the functions:</p>
 <ul>
 <li><code>gl_nlp()</code> - Natural Langage API</li>

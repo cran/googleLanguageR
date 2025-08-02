@@ -12,76 +12,108 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2020-04-19" />
+<meta name="date" content="2025-08-02" />
 
 <title>Google Cloud Speech-to-Text API</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {  }
+{ }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -90,13 +122,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -104,6 +143,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -301,107 +341,138 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Google Cloud Speech-to-Text API</h1>
 <h4 class="author">Mark Edmondson</h4>
-<h4 class="date">2020-04-19</h4>
+<h4 class="date">2025-08-02</h4>
 
 
 
-<p>The Google Cloud Speech-to-Text API enables you to convert audio to text by applying neural network models in an easy to use API. The API recognizes over 80 languages and variants, to support your global user base. You can transcribe the text of users dictating to an application’s microphone or enable command-and-control through voice among many other use cases.</p>
-<p>Read more <a href="https://cloud.google.com/speech/">on the Google Cloud Speech-to-Text Website</a></p>
-<p>The Cloud Speech API provides audio transcription. Its accessible via the <code>gl_speech</code> function.</p>
+<p>The Google Cloud Speech-to-Text API enables you to convert audio to
+text by applying neural network models in an easy to use API. The API
+recognizes over 80 languages and variants, to support your global user
+base. You can transcribe the text of users dictating to an application’s
+microphone or enable command-and-control through voice among many other
+use cases.</p>
+<p>Read more <a href="https://cloud.google.com/speech/">on the Google
+Cloud Speech-to-Text Website</a></p>
+<p>The Cloud Speech API provides audio transcription. Its accessible via
+the <code>gl_speech</code> function.</p>
 <p>Arguments include:</p>
 <ul>
-<li><code>audio_source</code> - this is a local file in the correct format, or a Google Cloud Storage URI. This can also be a <code>Wave</code> class object from the package <code>tuneR</code></li>
-<li><code>encoding</code> - the format of the sound file - <code>LINEAR16</code> is the common <code>.wav</code> format, other formats include <code>FLAC</code> and <code>OGG_OPUS</code></li>
-<li><code>sampleRate</code> - this needs to be set to what your file is recorded at.<br />
+<li><code>audio_source</code> - this is a local file in the correct
+format, or a Google Cloud Storage URI. This can also be a
+<code>Wave</code> class object from the package <code>tuneR</code></li>
+<li><code>encoding</code> - the format of the sound file -
+<code>LINEAR16</code> is the common <code>.wav</code> format, other
+formats include <code>FLAC</code> and <code>OGG_OPUS</code></li>
+<li><code>sampleRate</code> - this needs to be set to what your file is
+recorded at.<br />
 </li>
-<li><code>languageCode</code> - specify the language spoken as a <a href="https://tools.ietf.org/html/bcp47"><code>BCP-47</code> language tag</a></li>
-<li><code>speechContexts</code> - you can supply keywords to help the translation with some context.</li>
+<li><code>languageCode</code> - specify the language spoken as a <a href="https://tools.ietf.org/html/bcp47"><code>BCP-47</code> language
+tag</a></li>
+<li><code>speechContexts</code> - you can supply keywords to help the
+translation with some context.</li>
 </ul>
 <div id="returned-structure" class="section level3">
 <h3>Returned structure</h3>
-<p>The API returns a list of two data.frame tibbles - <code>transcript</code> and <code>timings</code>.</p>
-<p>Access them via the returned object and <code>$transcript</code> and <code>$timings</code></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">return &lt;-<span class="st"> </span><span class="kw">gl_speech</span>(test_audio, <span class="dt">languageCode =</span> <span class="st">&quot;en-GB&quot;</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">return<span class="op">$</span>transcript</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># A tibble: 1 x 2</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">#                                                                                                         transcript confidence</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">#                                                                                                              &lt;chr&gt;      &lt;chr&gt;</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">#1 to administer medicine to animals is frequently a very difficult matter and yet sometimes it's necessary to do so  0.9711006</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">return<span class="op">$</span>timings</a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">#   startTime endTime       word</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">#1         0s  0.100s         to</span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">#2     0.100s  0.700s administer</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">#3     0.700s  0.700s   medicine</span></a>
-<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">#4     0.700s  1.200s         to</span></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co"># etc...</span></a></code></pre></div>
+<p>The API returns a list of two data.frame tibbles -
+<code>transcript</code> and <code>timings</code>.</p>
+<p>Access them via the returned object and <code>$transcript</code> and
+<code>$timings</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>return <span class="ot">&lt;-</span> <span class="fu">gl_speech</span>(test_audio, <span class="at">languageCode =</span> <span class="st">&quot;en-GB&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>return<span class="sc">$</span>transcript</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># A tibble: 1 x 2</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#                                                                                                         transcript confidence</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#                                                                                                              &lt;chr&gt;      &lt;chr&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#1 to administer medicine to animals is frequently a very difficult matter and yet sometimes it&#39;s necessary to do so  0.9711006</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>return<span class="sc">$</span>timings</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#   startTime endTime       word</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#1         0s  0.100s         to</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#2     0.100s  0.700s administer</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#3     0.700s  0.700s   medicine</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#4     0.700s  1.200s         to</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co"># etc...</span></span></code></pre></div>
 </div>
 <div id="demo-for-google-cloud-speech-to-text-api" class="section level3">
 <h3>Demo for Google Cloud Speech-to-Text API</h3>
 <p>A test audio file is installed with the package which reads:</p>
 <blockquote>
-<p>“To administer medicine to animals is frequently a very difficult matter, and yet sometimes it’s necessary to do so”</p>
+<p>“To administer medicine to animals is frequently a very difficult
+matter, and yet sometimes it’s necessary to do so”</p>
 </blockquote>
-<p>The file is sourced from the University of Southampton’s speech detection (<code>http://www-mobile.ecs.soton.ac.uk/</code>) group and is fairly difficult for computers to parse, as we see below:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(googleLanguageR)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">## get the sample source file</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">test_audio &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;woman1_wb.wav&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;googleLanguageR&quot;</span>)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">## its not perfect but...:)</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw">gl_speech</span>(test_audio)<span class="op">$</span>transcript</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">## get alternative transcriptions</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="kw">gl_speech</span>(test_audio, <span class="dt">maxAlternatives =</span> 2L)<span class="op">$</span>transcript</a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="kw">gl_speech</span>(test_audio, <span class="dt">languageCode =</span> <span class="st">&quot;en-GB&quot;</span>)<span class="op">$</span>transcript</a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">## help it out with context for &quot;frequently&quot;</span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="kw">gl_speech</span>(test_audio, </a>
-<a class="sourceLine" id="cb2-15" data-line-number="15">            <span class="dt">languageCode =</span> <span class="st">&quot;en-GB&quot;</span>, </a>
-<a class="sourceLine" id="cb2-16" data-line-number="16">            <span class="dt">speechContexts =</span> <span class="kw">list</span>(<span class="dt">phrases =</span> <span class="kw">list</span>(<span class="st">&quot;is frequently a very difficult&quot;</span>)))<span class="op">$</span>transcript</a></code></pre></div>
+<p>The file is sourced from the University of Southampton’s speech
+detection (<code>http://www-mobile.ecs.soton.ac.uk/</code>) group and is
+fairly difficult for computers to parse, as we see below:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(googleLanguageR)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">## get the sample source file</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>test_audio <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;woman1_wb.wav&quot;</span>, <span class="at">package =</span> <span class="st">&quot;googleLanguageR&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">## its not perfect but...:)</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="fu">gl_speech</span>(test_audio)<span class="sc">$</span>transcript</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">## get alternative transcriptions</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="fu">gl_speech</span>(test_audio, <span class="at">maxAlternatives =</span> <span class="dv">2</span><span class="dt">L</span>)<span class="sc">$</span>transcript</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="fu">gl_speech</span>(test_audio, <span class="at">languageCode =</span> <span class="st">&quot;en-GB&quot;</span>)<span class="sc">$</span>transcript</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="do">## help it out with context for &quot;frequently&quot;</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="fu">gl_speech</span>(test_audio, </span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>            <span class="at">languageCode =</span> <span class="st">&quot;en-GB&quot;</span>, </span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>            <span class="at">speechContexts =</span> <span class="fu">list</span>(<span class="at">phrases =</span> <span class="fu">list</span>(<span class="st">&quot;is frequently a very difficult&quot;</span>)))<span class="sc">$</span>transcript</span></code></pre></div>
 </div>
 <div id="word-transcripts" class="section level3">
 <h3>Word transcripts</h3>
-<p>The API <a href="https://cloud.google.com/speech/reference/rest/v1/speech/recognize#WordInfo">supports timestamps</a> on when words are recognised. These are outputted into a second data.frame that holds three entries: <code>startTime</code>, <code>endTime</code> and the <code>word</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">str</span>(result<span class="op">$</span>timings)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#'data.frame':  152 obs. of  3 variables:</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co"># $ startTime: chr  &quot;0s&quot; &quot;0.100s&quot; &quot;0.500s&quot; &quot;0.700s&quot; ...</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co"># $ endTime  : chr  &quot;0.100s&quot; &quot;0.500s&quot; &quot;0.700s&quot; &quot;0.900s&quot; ...</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co"># $ word     : chr  &quot;a&quot; &quot;Dream&quot; &quot;Within&quot; &quot;A&quot; ...</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">result<span class="op">$</span>timings</a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#     startTime endTime       word</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#1          0s  0.100s          a</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#2      0.100s  0.500s      Dream</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#3      0.500s  0.700s     Within</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#4      0.700s  0.900s          A</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#5      0.900s      1s      Dream</span></a></code></pre></div>
+<p>The API <a href="https://cloud.google.com/speech/reference/rest/v1/speech/recognize#WordInfo">supports
+timestamps</a> on when words are recognised. These are outputted into a
+second data.frame that holds three entries: <code>startTime</code>,
+<code>endTime</code> and the <code>word</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">str</span>(result<span class="sc">$</span>timings)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&#39;data.frame&#39;:  152 obs. of  3 variables:</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co"># $ startTime: chr  &quot;0s&quot; &quot;0.100s&quot; &quot;0.500s&quot; &quot;0.700s&quot; ...</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># $ endTime  : chr  &quot;0.100s&quot; &quot;0.500s&quot; &quot;0.700s&quot; &quot;0.900s&quot; ...</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co"># $ word     : chr  &quot;a&quot; &quot;Dream&quot; &quot;Within&quot; &quot;A&quot; ...</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>result<span class="sc">$</span>timings</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#     startTime endTime       word</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#1          0s  0.100s          a</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#2      0.100s  0.500s      Dream</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#3      0.500s  0.700s     Within</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#4      0.700s  0.900s          A</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#5      0.900s      1s      Dream</span></span></code></pre></div>
 </div>
 <div id="custom-configurations" class="section level2">
 <h2>Custom configurations</h2>
-<p>You can also send in other arguments which can help shape the output, such as speaker diagrization (labelling different speakers) - to use such custom configurations create a <a href="https://cloud.google.com/speech-to-text/docs/reference/rest/v1p1beta1/RecognitionConfig"><code>RecognitionConfig</code></a> object. This can be done via R lists which are converted to JSON via <code>library(jsonlite)</code> and an example is shown below:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## Use a custom configuration</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">my_config &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">encoding =</span> <span class="st">&quot;LINEAR16&quot;</span>,</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">                  <span class="dt">diarizationConfig =</span> <span class="kw">list</span>(</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">                    <span class="dt">enableSpeakerDiarization =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">                    <span class="dt">minSpeakerCount =</span> <span class="dv">2</span>,</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">                    <span class="dt">maxSpeakCount =</span> <span class="dv">3</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">                  ))</a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co"># languageCode is required, so will be added if not in your custom config</span></a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="kw">gl_speech</span>(my_audio, <span class="dt">languageCode =</span> <span class="st">&quot;en-US&quot;</span>, <span class="dt">customConfig =</span> my_config)</a></code></pre></div>
+<p>You can also send in other arguments which can help shape the output,
+such as speaker diagrization (labelling different speakers) - to use
+such custom configurations create a <a href="https://cloud.google.com/speech-to-text/docs/reference/rest/v1p1beta1/RecognitionConfig"><code>RecognitionConfig</code></a>
+object. This can be done via R lists which are converted to JSON via
+<code>library(jsonlite)</code> and an example is shown below:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="do">## Use a custom configuration</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>my_config <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">encoding =</span> <span class="st">&quot;LINEAR16&quot;</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>                  <span class="at">diarizationConfig =</span> <span class="fu">list</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>                    <span class="at">enableSpeakerDiarization =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>                    <span class="at">minSpeakerCount =</span> <span class="dv">2</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>                    <span class="at">maxSpeakCount =</span> <span class="dv">3</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>                  ))</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co"># languageCode is required, so will be added if not in your custom config</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="fu">gl_speech</span>(my_audio, <span class="at">languageCode =</span> <span class="st">&quot;en-US&quot;</span>, <span class="at">customConfig =</span> my_config)</span></code></pre></div>
 </div>
 <div id="asynchronous-calls" class="section level2">
 <h2>Asynchronous calls</h2>
-<p>For speech files greater than 60 seconds of if you don’t want your results straight away, set <code>asynch = TRUE</code> in the call to the API.</p>
-<p>This will return an object of class <code>&quot;gl_speech_op&quot;</code> which should be used within the <code>gl_speech_op()</code> function to check the status of the task. If the task is finished, then it will return an object the same form as the non-asynchronous case.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">async &lt;-<span class="st"> </span><span class="kw">gl_speech</span>(test_audio, <span class="dt">asynch =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">async</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">## Send to gl_speech_op() for status</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">## 4625920921526393240</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">result &lt;-<span class="st"> </span><span class="kw">gl_speech_op</span>(async)</a></code></pre></div>
+<p>For speech files greater than 60 seconds of if you don’t want your
+results straight away, set <code>asynch = TRUE</code> in the call to the
+API.</p>
+<p>This will return an object of class <code>&quot;gl_speech_op&quot;</code> which
+should be used within the <code>gl_speech_op()</code> function to check
+the status of the task. If the task is finished, then it will return an
+object the same form as the non-asynchronous case.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>async <span class="ot">&lt;-</span> <span class="fu">gl_speech</span>(test_audio, <span class="at">asynch =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>async</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">## Send to gl_speech_op() for status</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="do">## 4625920921526393240</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">gl_speech_op</span>(async)</span></code></pre></div>
 </div>
 
 

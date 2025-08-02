@@ -2,6 +2,7 @@
 % Please edit documentation in R/googleLanguageR.R
 \docType{package}
 \name{googleLanguageR}
+\alias{googleLanguageR-package}
 \alias{googleLanguageR}
 \title{googleLanguageR}
 \description{
@@ -11,8 +12,19 @@ This package contains functions for analysing language through the
 \details{
 For examples and documentation see the vignettes and the website:
 
-\url{http://code.markedmondson.me/googleLanguageR/}
+\url{https://code.markedmondson.me/googleLanguageR/}
 }
 \seealso{
 \url{https://cloud.google.com/products/machine-learning/}
+}
+\author{
+\strong{Maintainer}: Mark Edmondson \email{r@sunholo.com}
+
+Other contributors:
+\itemize{
+  \item John Muschelli \email{muschellij2@gmail.com} [contributor]
+  \item Neal Richardson \email{neal.p.richardson@gmail.com} (Neal reviewed the package for ropensci, see <https://github.com/ropensci/onboarding/issues/127>) [reviewer]
+  \item Julia Gustavsen \email{j.gustavsen@gmail.com} (Julia reviewed the package for ropensci, see <https://github.com/ropensci/onboarding/issues/127>) [reviewer]
+}
+
 }

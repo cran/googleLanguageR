@@ -20,7 +20,7 @@
 #'
 #' @return A list of the following objects, if those fields are asked for via \code{nlp_type}:
 #'
-#' \itemize{
+#' \describe{
 #'  \item{sentences - }{\href{https://cloud.google.com/natural-language/docs/reference/rest/v1/Sentence}{Sentences in the input document}}
 #'  \item{tokens - }{\href{https://cloud.google.com/natural-language/docs/reference/rest/v1/Token}{Tokens, along with their syntactic information, in the input document}}
 #'  \item{entities - }{\href{https://cloud.google.com/natural-language/docs/reference/rest/v1/Entity}{Entities, along with their semantic information, in the input document}}
