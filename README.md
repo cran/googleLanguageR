@@ -1,21 +1,17 @@
-googleLanguageR - R client for the Google Translation API, Google Cloud
-Natural Language API, Google Cloud Speech API and Google Cloud
-Speech-to-Text API
-================
-Mark Edmondson
-19th April 2020
+# googleLanguageR - R client for the Google Translation API, Natural Language API, Speech-to-Text API and Text-to-Speech API
 
 [![CRAN](https://www.r-pkg.org/badges/version/googleLanguageR)](https://cran.r-project.org/package=googleLanguageR)
 [![Build
-Status](https://travis-ci.org/ropensci/googleLanguageR.png?branch=master)](https://travis-ci.org/ropensci/googleLanguageR)
-[![codecov.io](http://codecov.io/github/ropensci/googleLanguageR/coverage.svg?branch=master)](http://codecov.io/github/ropensci/googleLanguageR?branch=master)
-[![](http://badges.ropensci.org/127_status.svg)](https://github.com/ropensci/onboarding/issues/127)
+Status](https://travis-ci.org/ropensci/googleLanguageR.png?branch=master)](https://app.travis-ci.com/ropensci/googleLanguageR)
+[![codecov.io](https://codecov.io/github/ropensci/googleLanguageR/coverage.svg?branch=master)](https://app.codecov.io/github/ropensci/googleLanguageR?branch=master)
 
 ## Language tools for R via Google Machine Learning APIs
 
+Read the [introduction blogpost on rOpenSci's blog](https://ropensci.org/blog/2017/10/03/googlelanguager/)
+
 This package contains functions for analysing language through the
 [Google Cloud Machine Learning
-APIs](https://cloud.google.com/products/machine-learning/)
+APIs](https://cloud.google.com/products/machine-learning)
 
 Note all are paid services, you will need to provide your credit card
 details for your own Google Project to use them.
@@ -45,7 +41,7 @@ researchers looking to scale text analysis.
 > happening in a call center or a messaging app.
 
 Read more [on the Google Natural Language
-API](https://cloud.google.com/natural-language/)
+API](https://cloud.google.com/natural-language)
 
 ## Google Cloud Translation API
 
@@ -57,7 +53,7 @@ API](https://cloud.google.com/natural-language/)
 > English).
 
 Read more [on the Google Cloud Translation
-Website](https://cloud.google.com/translate/)
+Website](https://cloud.google.com/translate)
 
 ## Google Cloud Speech-to-Text API
 
@@ -69,7 +65,7 @@ Website](https://cloud.google.com/translate/)
 > among many other use cases.
 
 Read more [on the Google Cloud Speech
-Website](https://cloud.google.com/speech/)
+Website](https://cloud.google.com/speech-to-text)
 
 ## Google Cloud Text-to-Speech API
 
@@ -82,7 +78,7 @@ Website](https://cloud.google.com/speech/)
 > devices.
 
 Read more [on the Google Cloud Text-to-Speech
-Website](https://cloud.google.com/text-to-speech/)
+Website](https://cloud.google.com/text-to-speech)
 
 ## Installation
 
@@ -98,17 +94,27 @@ Website](https://cloud.google.com/text-to-speech/)
     API](https://console.cloud.google.com/apis/api/language.googleapis.com/overview)
   - [Google Cloud Translation
     API](https://console.cloud.google.com/apis/api/translate.googleapis.com/overview)
-  - [Google Cloud Speech
+  - [Google Cloud Speech-to-Text
     API](https://console.cloud.google.com/apis/api/speech.googleapis.com/overview)
+  - [Google Cloud Text-to-Speech API](https://console.cloud.google.com/apis/library/texttospeech.googleapis.com)
 
 <!-- end list -->
 
 4.  [Generate a service account
     credential](https://cloud.google.com/storage/docs/authentication#generating-a-private-key)
-    as a JSON file
+    as a JSON file by first [creating a service account](https://developers.google.com/workspace/guides/create-credentials#create_a_service_account) and then [creating credentials for a service account](https://developers.google.com/workspace/guides/create-credentials#create_credentials_for_a_service_account)
 5.  Return to R, and install the official release via
     `install.packages("googleLanguageR")`, or the development version
     with `remotes::install_github("ropensci/googleLanguageR")`
+    
+### Docker image
+
+Some Docker images are publicly available.  In general `gcr.io/gcer-public/googleLanguageR:$BRANCH_NAME` carries that GitHub branch's version.
+
+* `gcr.io/gcer-public/googleLanguageR:CRAN` - the latest CRAN version  [![CRAN](https://www.r-pkg.org/badges/version/googleLanguageR)](https://cran.r-project.org/package=googleLanguageR)
+* `gcr.io/gcer-public/googleLanguageR:master` - latest GitHub master version [![Build
+Status](https://travis-ci.org/ropensci/googleLanguageR.png?branch=master)](https://app.travis-ci.com/ropensci/googleLanguageR)
+* `gcr.io/gcer-public/googleLanguageR:feature` - a feature branch from GitHub
 
 ## Usage
 
@@ -142,8 +148,9 @@ gl_auth("location_of_json_file.json")
 You can then call the APIs via the functions:
 
   - `gl_nlp()` - Natural Langage API
-  - `gl_speech()` - Cloud Speech API
+  - `gl_speech()` - Cloud Speech-to-Text API
   - `gl_translate()` - Cloud Translation API
+  - `gl_talk()` - Cloud Text-to-Speech API
 
 ## Natural Language API
 
@@ -180,9 +187,7 @@ nlp_result <- gl_nlp(texts)
 str(nlp_result, max.level = 2)
 ```
 
-See more examples and details [on the
-website](https://code.markedmondson.me/googleLanguageR/articles/nlp.html)
-or via `vignette("nlp", package = "googleLanguageR")`
+See more examples and details on the `vignette("nlp", package = "googleLanguageR")`
 
 ## Google Translation API
 
@@ -199,9 +204,7 @@ text <- "to administer medicine to animals is frequently a very difficult matter
 gl_translate(text, target = "da")$translatedText
 ```
 
-See more examples and details [on the
-website](https://code.markedmondson.me/googleLanguageR/articles/translation.html)
-or via `vignette("translate", package = "googleLanguageR")`
+See more examples and details on the `vignette("translate", package = "googleLanguageR")`
 
 ## Google Cloud Speech-to-Text API
 
@@ -214,7 +217,7 @@ A test audio file is installed with the package which reads:
 > matter, and yet sometimes it’s necessary to do so”
 
 The file is sourced from the University of Southampton’s speech
-detection (`http://www-mobile.ecs.soton.ac.uk/newcomms/`) group and is
+detection (`https://www-mobile.ecs.soton.ac.uk/newcomms/`) group and is
 fairly difficult for computers to parse, as we see below:
 
 ``` r
@@ -231,9 +234,7 @@ gl_speech(test_audio)$transcript
     ## 1 to administer medicine to animals is frequency of very diffi… 0.9180294
 ```
 
-See more examples and details [on the
-website](https://code.markedmondson.me/googleLanguageR/articles/speech.html)
-or via `vignette("speech", package = "googleLanguageR")`
+See more examples and details on the `vignette("speech", package = "googleLanguageR")`
 
 ## Google Cloud Text-to-Speech API
 
@@ -246,9 +247,7 @@ To use, supply your text to the function:
 gl_talk("This is a talking computer.  Hello Dave.")
 ```
 
-See more examples and details [on the
-website](https://code.markedmondson.me/googleLanguageR/articles/text-to-speech.html)
-or via `vignette("text-to-speech", package =
+See more examples and details on the `vignette("text-to-speech", package =
 "googleLanguageR")`
 
 [![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)

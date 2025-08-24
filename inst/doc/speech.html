@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2025-08-02" />
+<meta name="date" content="2025-08-24" />
 
 <title>Google Cloud Speech-to-Text API</title>
 
@@ -50,9 +50,8 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
-html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -63,7 +62,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -341,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Google Cloud Speech-to-Text API</h1>
 <h4 class="author">Mark Edmondson</h4>
-<h4 class="date">2025-08-02</h4>
+<h4 class="date">2025-08-24</h4>
 
 
 
@@ -351,8 +350,8 @@ recognizes over 80 languages and variants, to support your global user
 base. You can transcribe the text of users dictating to an application’s
 microphone or enable command-and-control through voice among many other
 use cases.</p>
-<p>Read more <a href="https://cloud.google.com/speech/">on the Google
-Cloud Speech-to-Text Website</a></p>
+<p>Read more <a href="https://cloud.google.com/speech-to-text">on the
+Google Cloud Speech-to-Text Website</a></p>
 <p>The Cloud Speech API provides audio transcription. Its accessible via
 the <code>gl_speech</code> function.</p>
 <p>Arguments include:</p>
@@ -366,8 +365,8 @@ formats include <code>FLAC</code> and <code>OGG_OPUS</code></li>
 <li><code>sampleRate</code> - this needs to be set to what your file is
 recorded at.<br />
 </li>
-<li><code>languageCode</code> - specify the language spoken as a <a href="https://tools.ietf.org/html/bcp47"><code>BCP-47</code> language
-tag</a></li>
+<li><code>languageCode</code> - specify the language spoken as a <a href="https://datatracker.ietf.org/doc/html/bcp47"><code>BCP-47</code>
+language tag</a></li>
 <li><code>speechContexts</code> - you can supply keywords to help the
 translation with some context.</li>
 </ul>
